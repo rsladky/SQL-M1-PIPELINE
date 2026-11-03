@@ -1,0 +1,37 @@
+# Secrets and machine-local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*credentials*.json
+
+# Vessel observations and derived data (including manifests/checkpoints)
+/data/**
+!/data/raw/
+!/data/processed/
+!/data/raw/.gitkeep
+!/data/processed/.gitkeep
+*.jsonl
+*.parquet
+*.csv
+*.zst
+*.zip
+*.checkpoint*
+*.manifest*
+*.part
+*.tmp
+
+# Local tooling, documentation drafts and build output
+.agent/
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.coverage
+*.log
+.DS_Store

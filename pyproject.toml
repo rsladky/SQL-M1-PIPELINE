@@ -1,0 +1,19 @@
+[project]
+name = "sql-m1-ais-pipeline"
+version = "0.1.0"
+description = "Squelette d'un pipeline AIS local avec agrégats NOAA sous validation"
+readme = "README.md"
+requires-python = ">=3.11,<3.15"
+dependencies = [
+  "aiohttp>=3.10,<4",
+  "zstandard>=0.23,<1",
+  "pyarrow>=17,<24",
+  "psycopg[binary]>=3.2,<4",
+  "huggingface-hub>=0.30,<2",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<10"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
