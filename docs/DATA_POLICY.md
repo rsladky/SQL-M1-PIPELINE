@@ -1,6 +1,6 @@
-# Provenance, périmètre pilote et règles de diffusion — étape 1
+# Provenance, périmètre pilote et règles de diffusion — étapes 1 et 2
 
-**État au 2026-11-03 : cadrage provisoire, à confirmer avant toute collecte ou publication.** Aucun jeu de données n'a été téléchargé ni téléversé. Ces choix ne constituent pas une autorisation de publier.
+**État au 2026-11-03 : le pilote NOAA a été approuvé et collecté localement ; aucun jeu n'a été téléversé.** Capture AISStream réelle encore bloquée par l'absence de clé. Les seuils d'agrégation restent provisoires : l'autorisation de collecte ne constitue pas une autorisation de publier.
 
 ## Deux sources distinctes
 
@@ -13,8 +13,8 @@ Citation prévue du produit NOAA : **NOAA Office for Coastal Management. (2024).
 
 ## Périmètre de travail à confirmer
 
-- **NOAA** : un seul jour pilote, **2024-01-14 UTC**, côte New York / New Jersey (rectangle approximatif 39°–42° N, 75°–71° O) à filtrer à la lecture du CSV national ; borne de départ d'environ 144,4 Mo compressés. Aucun échantillon NOAA acquis à l'étape 1. Pour un volume inférieur, [AccessAIS](https://marinecadastre.gov/accessais/) permet une commande manuelle géographique/temporelle de moins de 2 Go, mais ses URL expirent après 14 jours ou cinq accès ; ce n'est pas un endpoint permanent automatisable. Choix de la source officielle CSV quotidienne, zone, date et capacité disque **à confirmer avant l'étape 2**.
-- **AISStream** : capture pilote de **15 minutes**, même rectangle pour comparaison locale ; d'autres zones peuvent être ajoutées ultérieurement, sans prétendre couvrir les voyages mondiaux. Clé nécessaire, actuellement absente de l'environnement ; la page de documentation est accessible, **l'accès authentifié n'a pas été vérifié**.
+- **NOAA** : un seul jour pilote, **2024-01-14 UTC**, côte New York / New Jersey (rectangle approximatif 39°–42° N, 75°–71° O) à filtrer à la lecture du CSV national ; borne de départ d'environ 144,4 Mo compressés. Pilote acquis localement à l'étape 2 (151 376 897 octets compressés, 359 494 observations dans la zone, manifeste et JSONL ignorés). Pour un volume inférieur, [AccessAIS](https://marinecadastre.gov/accessais/) permet une commande manuelle géographique/temporelle de moins de 2 Go, mais ses URL expirent après 14 jours ou cinq accès ; ce n'est pas un endpoint permanent automatisable. Source/date/zone approuvées pour ce **pilote uniquement** ; capacité disque vérifiée avant téléchargement (100 Go disponibles, seuil logiciel de 3 Go).
+- **AISStream** : capture pilote de **15 minutes**, même rectangle pour comparaison locale ; d'autres zones peuvent être ajoutées ultérieurement, sans prétendre couvrir les voyages mondiaux. Clé nécessaire, actuellement absente de l'environnement ; la page de documentation est accessible, **l'accès authentifié et la capture réelle n'ont pas été vérifiés**.
 - Type `vessel_type` AIS **70–79** = famille « cargo » déclarée/corrigée selon la source ; **ne permet pas d'identifier précisément les porte-conteneurs**. NOAA peut corriger certains attributs via AVID (2024) : consulter le dictionnaire, ne pas confondre `cargo` et `vessel_type`. MMSI, IMO ou nom peuvent évoluer/être erronés ; lacunes de réception et positions aberrantes ne prouvent pas un mouvement réel.
 
 ## Projet d'agrégat public NOAA-only — à confirmer et auditer
