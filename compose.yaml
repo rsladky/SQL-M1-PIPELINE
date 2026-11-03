@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ais_pipeline
+      POSTGRES_USER: ais_user
+      # Fail closed: never run with a password committed in YAML/defaults.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in an ignored .env or environment}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - ais_pgdata:/var/lib/postgresql/data
+      # Init scripts run only on first creation of an empty database volume.
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ais_user -d ais_pipeline"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+volumes:
+  ais_pgdata:
