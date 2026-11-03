@@ -1,6 +1,6 @@
 # Pipeline AIS cargos — pilote local, publication Hub bloquée
 
-**Statut : six commits d'étapes distinctes poussés ; collecte NOAA de janvier 2024 et candidat mensuel désormais exclusivement locaux, publication Hub et validation juridique toujours bloquées. Aucun tag `v1.0.0`.** Ingestion, transformation et chargement/analyse PostgreSQL du premier pilote sont testés ; contrôles et Dataset Card du Hub préparés, sans dépôt ni téléversement. Le candidat local ne vaut **pas** autorisation de publication. AISStream n'a pas été contacté faute de clé. Le dépôt reste privé. Voir [provenance, limites et règles de diffusion](docs/DATA_POLICY.md), [reproductibilité et chiffres vérifiés](docs/REPRODUCIBILITY.md) et [présentation de 10 minutes](docs/PRESENTATION_10_MIN.md).
+**Statut : sept commits distincts poussés ; candidat NOAA mensuel et paquet Dataset Card désormais exclusivement locaux, publication Hub et validation juridique toujours bloquées. Aucun tag `v1.0.0`.** Ingestion, transformation et chargement/analyse PostgreSQL du premier pilote sont testés ; contrôles et Dataset Card du Hub préparés, sans dépôt ni téléversement. Le candidat local ne vaut **pas** autorisation de publication. AISStream n'a pas été contacté faute de clé. Le dépôt reste privé. Voir [provenance, limites et règles de diffusion](docs/DATA_POLICY.md), [reproductibilité et chiffres vérifiés](docs/REPRODUCIBILITY.md) et [présentation de 10 minutes](docs/PRESENTATION_10_MIN.md).
 
 ## Architecture locale (publication future non opérationnelle)
 
@@ -34,6 +34,10 @@ La base PostgreSQL 16 du `compose.yaml` lie uniquement `127.0.0.1`. Après confi
 ## Hub — préparation **sans publication**
 
 [Procédure, blocages juridiques et garde-fous](docs/PUBLISHING.md) ; [modèle complet de Dataset Card](docs/DATASET_CARD_TEMPLATE.md). Le script `scripts.publish.private_hub` ne crée **aucun dépôt** et ne contacte le Hub qu'avec une option explicite future, après contrôle NOAA-only du mois complet, revue écrite des droits, jeton, confirmation supplémentaire et vérification d'un dépôt dataset **déjà privé et vide**. Janvier 2024 dispose désormais d'un candidat **local**, mais sa diffusion est bloquée par l'absence de revue écrite des droits applicables au Hub, de jeton, de dépôt privé autorisé et d'accord utilisateur pour l'upload. Aucun dépôt Hub, upload, URL ou version ne sont disponibles.
+
+## Dataset agrégé et carte **brouillons locaux uniquement**
+
+Commande depuis la racine : `.venv/bin/python -m scripts.publish.local_package 2024-01`. Elle vérifie **en lecture seule** les 31 provenances/manifestes/checksums NOAA, le schéma limité à quatre colonnes, une seule ligne, les seuils et les contributions, puis copie uniquement le Parquet agrégé déjà présent dans `data/processed/noaa_candidate/` vers `data/local_dataset/noaa-2024-01-ny-nj/data/noaa_aggregate_2024-01.parquet`. Elle rend `data/local_dataset/noaa-2024-01-ny-nj/README.md` depuis [le modèle de carte locale](docs/LOCAL_DATASET_CARD_TEMPLATE.md) et écrit `manifest.json` avec les SHA-256 ; une seconde exécution vérifie le paquet sans l'écraser. Le candidat original reste intact. Le dossier entier est **ignoré par Git**, ne contient ni point AIS individuel, ni identifiant, ni trace ou secret et n'utilise **aucun réseau**. La carte indique « **DRAFT LOCAL ONLY — NOT PUBLISHED** », cite prudemment NOAA CSV.zst et précise qu'aucune licence/permission de redistribution pour ce produit n'est établie. **Ne pas ajouter ce dossier à Git ni le téléverser manuellement au Hub.** Le garde-fou distinct `scripts.publish.private_hub` demeure inchangé et refuse tout upload sans preuve écrite et nouvel accord.
 
 ## Étapes envisagées, **sur validation distincte de l'utilisateur**
 
