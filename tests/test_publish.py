@@ -87,13 +87,17 @@ class FakeHub:
         assert b"SYNTHETIC_FAKE_TOKEN" not in data + card
 
 
-def test_pilot_is_incomplete_and_absent_no_hub(monkeypatch):
+def test_missing_candidate_offline_no_hub(tmp_path, monkeypatch):
+    # Never depend on whether the operator has collected the real NOAA month.
     import scripts.publish.private_hub as module
     monkeypatch.setattr(module, "HfApi", lambda: (_ for _ in ()).throw(AssertionError("network attempted")))
+    raw = tmp_path / "data/raw"
+    processed = tmp_path / "data/processed"
+    approval = tmp_path / "data/approvals/noaa-hub.json"
     with pytest.raises(ValueError, match="candidate absent"):
-        preflight("2024-01", REPO, Path("data/approvals/noaa-hub.json"))
+        preflight("2024-01", REPO, approval, raw_root=raw, processed_root=processed)
     with pytest.raises(ValueError, match="2024 NOAA month"):
-        preflight("2025-01", REPO, Path("data/approvals/noaa-hub.json"))
+        preflight("2025-01", REPO, approval, raw_root=raw, processed_root=processed)
 
 
 def test_rights_not_confirmed_and_missing_token_block_before_hub(tmp_path, monkeypatch):
