@@ -1,3 +1,13 @@
+[build-system]
+requires = ["setuptools>=70", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["scripts*"]
+exclude = ["tests*", "data*", "sql*", "docs*"]
+namespaces = true
+
 [project]
 name = "sql-m1-ais-pipeline"
 version = "0.1.0"
