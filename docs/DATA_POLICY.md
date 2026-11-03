@@ -1,6 +1,6 @@
-# Provenance, périmètre pilote et règles de diffusion — étapes 1 et 2
+# Provenance, périmètre pilote et règles de diffusion — étapes 1 à 3
 
-**État au 2026-11-03 : le pilote NOAA a été approuvé et collecté localement ; aucun jeu n'a été téléversé.** Capture AISStream réelle encore bloquée par l'absence de clé. Les seuils d'agrégation restent provisoires : l'autorisation de collecte ne constitue pas une autorisation de publier.
+**État au 2026-11-03 : le pilote NOAA a été approuvé, collecté et transformé localement ; aucun jeu n'a été téléversé.** Capture AISStream réelle encore bloquée par l'absence de clé. Les seuils d'agrégation restent provisoires : l'autorisation de collecte ne constitue pas une autorisation de publier.
 
 ## Deux sources distinctes
 
@@ -19,7 +19,7 @@ Citation prévue du produit NOAA : **NOAA Office for Coastal Management. (2024).
 
 ## Projet d'agrégat public NOAA-only — à confirmer et auditer
 
-Granularité **mois calendaire UTC × vaste zone côtière prédéfinie** (pas de grille fine, pas de ports, pas de trajet ni de dates journalières). Candidat initial : une zone NY/NJ entière ; ne publier aucun groupe avant **au moins 20 MMSI distincts, 200 observations et 7 jours UTC distincts** sur le mois **complet** ; supprimer les cellules rares plutôt que les regrouper dans un « autres » révélateur. Une seule journée pilote n'est donc **jamais publiable**. Ne pas ventiler davantage par sous-type ou attribut du navire. Contrôler séparément contribution disproportionnée d'un navire, possibilité de déduction par différence entre tableaux/versions et unicité des groupes ; les seuils ne garantissent pas à eux seuls la non-réidentification. Les règles finales nécessitent tests avant publication.
+Granularité **mois calendaire UTC × vaste zone côtière prédéfinie** (pas de grille fine, pas de ports, pas de trajet ni de dates journalières). Candidat initial : une zone NY/NJ entière ; ne publier aucun groupe avant **au moins 20 MMSI distincts, 200 observations et 7 jours UTC distincts** sur le mois **complet** ; supprimer les cellules rares plutôt que les regrouper dans un « autres » révélateur ; supprimer également si un MMSI contribue à **plus de 10 %** des observations valides. Le code exige les **fichiers et manifestes des 28/29/30/31 jours calendaires complets**, indépendamment du seuil des 7 jours observés. Une seule journée pilote n'est donc **jamais publiable**. Le pilote 2024-01-14 transformé localement renvoie `incomplete_month` (30 jours manquants), sans création de candidat. Ne pas ventiler davantage par sous-type ou attribut du navire. Contrôler séparément contribution disproportionnée d'un navire, possibilité de déduction par différence entre tableaux/versions et unicité des groupes ; les seuils ne garantissent pas à eux seuls la non-réidentification. Les règles finales nécessitent tests avant publication.
 
 Interdits dans la sortie publique : identifiants MMSI/IMO/nom/appel, positions exactes, horodatages précis, trajets individuels, données AISStream, CSV/JSONL/Parquet détaillé et métadonnées qui permettent de les retrouver. Les espaces locaux `data/raw/noaa/`, `data/raw/aisstream/` et `data/processed/` restent ignorés de Git. Ne publier que des statistiques dérivées NOAA après revue juridique spécifique.
 
