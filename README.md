@@ -1,6 +1,6 @@
 # Pipeline AIS cargos — pilote local, publication Hub bloquée
 
-**Statut : sept commits distincts poussés ; candidat NOAA mensuel et paquet Dataset Card désormais exclusivement locaux, publication Hub et validation juridique toujours bloquées. Aucun tag `v1.0.0`.** Ingestion, transformation et chargement/analyse PostgreSQL du premier pilote sont testés ; contrôles et Dataset Card du Hub préparés, sans dépôt ni téléversement. Le candidat local ne vaut **pas** autorisation de publication. AISStream n'a pas été contacté faute de clé. Le dépôt reste privé. Voir [provenance, limites et règles de diffusion](docs/DATA_POLICY.md), [reproductibilité et chiffres vérifiés](docs/REPRODUCIBILITY.md) et [présentation de 10 minutes](docs/PRESENTATION_10_MIN.md).
+**Statut : commits distincts poussés sur GitHub ; candidat NOAA mensuel et paquet Dataset Card désormais exclusivement locaux, publication Hub et validation juridique toujours bloquées. Aucun tag `v1.0.0`.** Ingestion, transformation et chargement/analyse PostgreSQL du premier pilote sont testés ; contrôles et Dataset Card du Hub préparés, sans dépôt ni téléversement. Le candidat local ne vaut **pas** autorisation de publication. AISStream n'a pas été contacté faute de clé. Le dépôt reste privé. Voir [provenance, limites et règles de diffusion](docs/DATA_POLICY.md), [reproductibilité et chiffres vérifiés](docs/REPRODUCIBILITY.md) et [présentation de 10 minutes](docs/PRESENTATION_10_MIN.md).
 
 ## Architecture locale (publication future non opérationnelle)
 
