@@ -21,11 +21,11 @@ dataset_info:
 
 # NOAA Marine Cadastre cargo aggregate — {{MONTH}}, NY/NJ
 
-**Status: private review dataset only. Not approved for public release.** This card is a template rendered only after a documented legal and privacy review; the repository must already exist and be private. No data have been uploaded merely by creating this template. No AISStream data, positions, identifiers or vessel-level sequences are included in the aggregate Parquet.
+**Status: private derived-product review only. Not approved for public release.** This card is rendered after a human-documented interpretation of published source terms and disclosure risks, **not** an individual NOAA permission or legal opinion. The repository must already exist and be private; rendering this card uploads nothing. No AISStream data, positions, identifiers or vessel-level sequences are included in the aggregate Parquet.
 
 ## Dataset summary and purpose
 
-One record per **complete UTC calendar month** and one fixed, broad coastal region. The underlying NOAA AIS observations are historical land-receiver broadcast points, not a complete worldwide track or count of all voyages. Intended only as a coarse descriptive aid to coastal/ocean planning; **not for navigation, surveillance, regulatory or enforcement decisions**. The pilot 2024-01-14 by itself cannot produce a record because the rest of January is missing.
+One record per **complete UTC calendar month** and one fixed, broad coastal region. The underlying NOAA AIS observations are historical land-receiver broadcast points, not a complete worldwide track or count of all voyages. Intended only as a coarse descriptive aid to coastal/ocean planning; **not for navigation, surveillance, regulatory or enforcement decisions**. The historical one-day pilot alone did not produce a monthly record; the January 2024 candidate used here requires every daily NOAA unit and a complete UTC month.
 
 ## Fields and unit of analysis
 
@@ -47,13 +47,24 @@ Period covered by **this file**: {{MONTH}} (UTC). Source year: {{YEAR}}. Geograp
 
 ## Provenance, citation and usage conditions
 
-{{CITATION}}
+**Provisional product attribution recorded by the human reviewer (verify exact metadata title):** {{CITATION}}
 
-Original data and metadata: [Marine Cadastre AIS](https://marinecadastre.gov/ais/), [InPort metadata](https://www.fisheries.noaa.gov/inport/item/55360), [NOAA AIS FAQ — Appropriate Use](https://coast.noaa.gov/data/marinecadastre/ais/faq.pdf), and [AIS data dictionary](https://coast.noaa.gov/data/marinecadastre/ais/data-dictionary.pdf). NOAA states that derived products may be released with citation, **but** its FAQ also quotes U.S. Coast Guard restrictions on retransmitting/redistributing AIS information outside approved purposes. A label `other`/`unknown` is not permission. The exact source-product notice and conditions must be reviewed for the planned upload and for any later visibility change.
+Source: [NOAA Marine Cadastre 2024 national daily AIS CSV.zst index](https://noaaocm.blob.core.windows.net/ais/csv2/csv2024/index.html), not an AISStream stream or an assumed CC0 CSV release. Human-reviewed published texts (URLs/revision labels/access dates recorded, but their contents are **not** independently certified by this script):
 
-**Reviewed permissions and conditions for this private derived-product upload:** {{CONDITIONS}}
+- [NOAA AIS FAQ — Appropriate Use]({{FAQ_URL}}), revision/edition: {{FAQ_REVISION}}; reviewed {{FAQ_DATE}}.
+- [Exact NOAA CSV.zst source-product notice/metadata]({{NOTICE_URL}}), revision/edition: {{NOTICE_REVISION}}; reviewed {{NOTICE_DATE}}. The reviewer must verify this notice applies to **this 2024 CSV.zst archive**, not another AIS product.
+- Reference: [AIS data dictionary](https://coast.noaa.gov/data/marinecadastre/ais/data-dictionary.pdf).
 
-**License:** This project assigns **no license** to the NOAA input or to this derived dataset; neither public-domain generalities nor the private upload confer an unrestricted license to reuse/retransmit AIS data. If a formal license/permission designation is established, document its exact legal text and scope after review; do not invent one. **Do not make this dataset public, tag a release or redistribute it without a separate documented authorization and privacy review.** If authorization is unclear, ask NOAA (`MarineCadastre@noaa.gov`) and leave the dataset private without contested data.
+The FAQ discusses releasing derived products with citation while quoting U.S. Coast Guard limits on retransmission/redistribution of AIS information outside approved purposes. **That tension is not settled by this card, the script or private Hub visibility.** The following are the reviewer's **documented interpretation**, not NOAA endorsement:
+
+- Derived-product clause and attribution: {{DERIVED_ANALYSIS}}
+- USCG AIS-sharing restriction applied to this aggregate: {{USCG_ANALYSIS}}
+- Intended-use compatibility and restrictions: {{PURPOSE_ANALYSIS}}
+- Terms/conditions for this private-only scope: {{CONDITIONS}}
+- Human privacy, linkage and differencing assessment: {{PRIVACY_ANALYSIS}}
+- Residual legal and reidentification uncertainty: {{UNCERTAINTY}}
+
+**License:** No NOAA individual permission is claimed; **no CSV.zst CC0 or other open license is asserted**, and this project grants no unrestricted permission for reuse/retransmission of AIS information. The review reflects a risk-bearing interpretation of public materials, **not legal advice**. If the product notice or USCG scope is unclear, pause and seek clarification from NOAA (`MarineCadastre@noaa.gov`); an empty or ambiguously authorized private dataset is safer than uploading contested data. **Do not make this dataset public, tag a release or redistribute it without separate documented authorization and privacy review.**
 
 ## Limitations and appropriate use
 
