@@ -1,6 +1,6 @@
 # Pipeline AIS cargos — pilote local, publication Hub bloquée
 
-**Statut : commits distincts poussés sur GitHub ; candidat NOAA mensuel et paquet Dataset Card désormais exclusivement locaux, publication Hub et validation juridique toujours bloquées. Aucun tag `v1.0.0`.** Ingestion, transformation et chargement/analyse PostgreSQL du premier pilote sont testés ; contrôles et Dataset Card du Hub préparés, sans dépôt ni téléversement. Le candidat local ne vaut **pas** autorisation de publication. AISStream n'a pas été contacté faute de clé. Le dépôt reste privé. Voir [provenance, limites et règles de diffusion](docs/DATA_POLICY.md), [reproductibilité et chiffres vérifiés](docs/REPRODUCIBILITY.md) et [présentation de 10 minutes](docs/PRESENTATION_10_MIN.md).
+**Statut : commits distincts poussés sur GitHub ; les 31 jours NOAA détaillés et l'agrégat candidat de janvier sont chargés dans PostgreSQL local, le paquet Dataset Card reste local, publication Hub et validation juridique toujours bloquées. Aucun tag `v1.0.0`.** Aucun dépôt ni téléversement Hub. Le candidat local ne vaut **pas** autorisation de publication. AISStream n'a pas été contacté faute de clé. Le dépôt reste privé. Voir [provenance, limites et règles de diffusion](docs/DATA_POLICY.md), [reproductibilité et chiffres vérifiés](docs/REPRODUCIBILITY.md) ; le [scénario de 10 minutes](docs/PRESENTATION_10_MIN.md) est facultatif et **aucune présentation n'est demandée**.
 
 ## Architecture locale (publication future non opérationnelle)
 
@@ -29,7 +29,18 @@ Les sources conservent des provenance et espaces de stockage séparés. AISStrea
 
 ## PostgreSQL et analyses **locales**
 
-La base PostgreSQL 16 du `compose.yaml` lie uniquement `127.0.0.1`. Après configuration du secret hors Git, `docker compose up -d --wait postgres`. **Compose lit `.env` automatiquement, pas le script Python** : depuis la racine, charger uniquement votre propre `.env` de confiance (affectations compatibles avec le shell), sans afficher de secret ni le saisir dans l'historique : `(. ./.env && export DATABASE_URL && .venv/bin/python -m scripts.load.postgres data/processed/source/noaa/manifests/2024-01-14-ny-nj.json)`. Le sous-shell évite de conserver `DATABASE_URL` exportée dans la session. Voir [le détail de cette précaution](docs/POSTGRES.md). `sql/schema.sql` crée les tables `sources`, `vessels`, `observations`, `ingestion_batches` et `noaa_aggregates` ; `sql/analyses.sql` documente cinq requêtes exécutables. Le chargement valide la provenance et les checksums et reste transactionnel/idempotent : **22 235 observations au premier chargement (6,92 s), 0 au second (0,15 s)**. La table SQL `noaa_aggregates` demeure vide : le candidat mensuel existe localement, mais n'a pas été chargé en base. [Détail des contraintes, requêtes et `EXPLAIN ANALYZE` avant/après index](docs/POSTGRES.md) ; ne jamais exposer les résultats contenant MMSI/positions.
+La base PostgreSQL 16 du `compose.yaml` lie uniquement `127.0.0.1`. Avant chargement : vérifier `df -h .`, `docker compose ps` (service sain et port lié à la boucle locale), le nom/host de `DATABASE_URL` hors Git et les **31** manifestes et checksums NOAA. **Compose lit `.env` automatiquement, pas le script Python** ; sourcer uniquement son propre `.env` de confiance dans un sous-shell, jamais afficher le secret. Le chargeur transactionnel/idempotent reprend les jours déjà chargés sans réinitialiser la base :
+
+```sh
+(
+  . ./.env && export DATABASE_URL &&
+    .venv/bin/python -m scripts.load.postgres \
+      data/processed/source/noaa/manifests/2024-01-??-ny-nj.json \
+      --aggregate data/processed/noaa_candidate/2024-01-ny-nj.parquet
+)
+```
+
+Au **2026-11-06**, `ingestion_batches` contient **31** lots NOAA pour janvier ; `observations`, **782 603** points NOAA dont **51** exclus par qualité de l'agrégat ; `noaa_aggregates`, **une** ligne locale (315 émetteurs MMSI distincts, **782 552** observations retenues). Aucune observation AISStream. Le second chargement des 31 manifestes insère **0** point. Les chiffres SQL sont cohérents avec le candidat ; l'agrégat n'est **pas** un dataset publié ni une autorisation de diffusion. [Détail des conditions, cinq requêtes et mesures d'index](docs/POSTGRES.md) ; ne jamais afficher/partager les résultats SQL contenant MMSI ou positions.
 
 ## Hub — préparation **sans publication**
 
@@ -44,9 +55,9 @@ Commande depuis la racine : `.venv/bin/python -m scripts.publish.local_package 2
 1. **Terminée** : cadrage, dépôt privé et configuration locale.
 2. **Implémentée, avec pilote NOAA local** : collecte asynchrone à reprise vers `data/raw/` JSONL ; tests de panne synthétiques. Capture AISStream réelle bloquée faute de clé.
 3. **Implémentée, janvier NOAA transformé localement** : Parquet par source/date et candidat NOAA-only local ; mois incomplet toujours supprimé par les contrôles, tests synthétiques.
-4. **Implémentée et testée localement** : PostgreSQL, chargement idempotent, cinq analyses SQL, `EXPLAIN ANALYZE` avant/après index mesuré.
+4. **Implémentée et chargée en local** : PostgreSQL contient les 31 jours NOAA et l'agrégat candidat ; reprise idempotente, cinq analyses SQL, ancien `EXPLAIN ANALYZE` avant/après index sur le pilote et nouveau plan sur le mois complet (sans fausse comparaison avant/après).
 5. **Préparation/tests uniquement** : script privé contrôlé et Dataset Card modèle ; aucun dépôt créé ni fichier envoyé. Malgré le mois local désormais complet, droits écrits, jeton et accord d'upload restent absents.
-6. **Documentation et présentation committées/poussées, validation juridique/finale en attente** : [guide de reproduction](docs/REPRODUCIBILITY.md), [scénario 10 minutes](docs/PRESENTATION_10_MIN.md), mesures du premier pilote et audit Git. Tag final uniquement une fois les droits et le dataset validés.
+6. **Documentation disponible, validation juridique/finale en attente** : [guide de reproduction](docs/REPRODUCIBILITY.md), mesures du pilote et du mois local, audit Git ; [scénario 10 minutes](docs/PRESENTATION_10_MIN.md) conservé **facultativement**, aucune présentation requise. Tag final uniquement une fois les droits et le dataset validés.
 
 La publication réelle de l'étape 5 et le livrable final/tag de l'étape 6 ne sont **pas** faits. Aucune capture AISStream réelle ni URL Hub n'est disponible. Les critères de publication restent à confirmer dans `docs/DATA_POLICY.md` : janvier est complet **en local**, mais le candidat ne peut pas être transféré au Hub dans l'état actuel des droits et garde-fous.
 
