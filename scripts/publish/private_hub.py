@@ -19,7 +19,7 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 import pyarrow.parquet as pq
-from huggingface_hub import CommitOperationAdd, HfApi
+from huggingface_hub import CommitOperationAdd, HfApi, get_token
 
 from scripts.transform.aggregate import MIN_OBSERVATIONS, MIN_VESSELS, PUBLIC_SCHEMA, candidate
 from scripts.transform.batches import sha256
@@ -248,9 +248,9 @@ def upload_private(
                       raw_root=raw_root, processed_root=processed_root)
     if fresh != ready:
         raise ValueError("candidate/card changed since preflight; refusing remote upload")
-    token = token or os.environ.get("HF_TOKEN")
+    token = token or os.environ.get("HF_TOKEN") or get_token()
     if not token:
-        raise PermissionError("HF_TOKEN missing; refusing all Hub requests")
+        raise PermissionError("HF token missing (HF_TOKEN or `hf auth login`); refusing all Hub requests")
     api = api or HfApi()
     info = api.repo_info(repo_id=ready.repo_id, repo_type="dataset", token=token)
     if info.private is not True or info.id != ready.repo_id:

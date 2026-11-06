@@ -146,6 +146,7 @@ def test_documented_review_and_missing_token_block_before_hub(tmp_path, monkeypa
     assert b"synthetic-source-review.md" not in ready.card
     fake = FakeHub()
     monkeypatch.delenv("HF_TOKEN", raising=False)
+    monkeypatch.setattr("scripts.publish.private_hub.get_token", lambda: None)
     with pytest.raises(PermissionError, match="confirmation"):
         upload_private(ready, approval_path=approval, raw_root=raw, processed_root=processed, api=fake)
     with pytest.raises(PermissionError, match="HF_TOKEN"):
@@ -166,7 +167,7 @@ def test_public_or_nonempty_remote_repo_rejected(tmp_path):
         assert "create_commit" not in fake.calls
 
 
-def test_only_card_and_approved_noaa_bytes_can_be_sent_to_mock(tmp_path):
+def test_only_card_and_approved_noaa_bytes_can_be_sent_to_mock(tmp_path, monkeypatch):
     raw, processed = _complete_month(tmp_path)
     # An unrelated local AISStream file must never enter the upload operations.
     private_ais = raw / "aisstream" / "synthetic.jsonl"
@@ -175,8 +176,10 @@ def test_only_card_and_approved_noaa_bytes_can_be_sent_to_mock(tmp_path):
     approval = _approval(tmp_path, processed)
     ready = preflight("2024-01", REPO, approval, raw_root=raw, processed_root=processed)
     fake = FakeHub()
+    monkeypatch.delenv("HF_TOKEN", raising=False)
+    monkeypatch.setattr("scripts.publish.private_hub.get_token", lambda: "SYNTHETIC_FAKE_TOKEN")
     assert upload_private(ready, approval_path=approval, raw_root=raw, processed_root=processed,
-                          api=fake, token="SYNTHETIC_FAKE_TOKEN", confirmation=CONFIRMATION) == (
+                          api=fake, confirmation=CONFIRMATION) == (
                           "https://huggingface.co/datasets/" + REPO)
     assert fake.calls == ["repo_info", "list_repo_files", "create_commit", "repo_info"]
 
